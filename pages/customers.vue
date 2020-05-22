@@ -1,9 +1,12 @@
 <template>
-  <div>
-    <Customer :customer="customer" />
-  </div>
+  <v-card class="mx-auto" color="white" width="400px">
+    <v-card-text>
+      <Customer :customer="customer" class="mx-4" />
+    </v-card-text>
+  </v-card>
 </template>
 
+//
 <script>
 import Customer from '@/components/Customer.vue'
 export default {
