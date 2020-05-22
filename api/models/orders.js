@@ -4,12 +4,12 @@ const Schema = mongoose.Schema
 const OrderSchema = new Schema({
   customerId: {
     type: Schema.Types.ObjectId,
-    required: [true, 'customerId is required']
+    required: [true, 'order.customerId is required']
   },
   customerName: String,
   dateOrdered: {
     type: Date,
-    required: [true, 'dateOrdered is required']
+    required: [true, 'order.dateOrdered is required']
   },
   dateFilled: Date,
   dateShipped: Date,
