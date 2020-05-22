@@ -4,7 +4,7 @@ const Schema = mongoose.Schema
 const CustomerSchema = new Schema({
   name: {
     type: String,
-    required: [true, 'name field is required']
+    required: [true, 'customer.name is required']
   },
   street: String,
   city: String,
