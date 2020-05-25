@@ -1,6 +1,9 @@
 <template>
   <v-container fluid>
-    <h1>Customer Lookup</h1>
+    <h1>
+      <span><v-icon large>mdi-account</v-icon></span>
+      Customer Lookup
+    </h1>
     <v-data-iterator
       :items="customers"
       :items-per-page.sync="itemsPerPage"
@@ -12,16 +15,16 @@
     >
       <template v-slot:header>
         <v-toolbar dark color="blue darken-3" class="mb-1">
-          <v-text-field
-            v-model="search"
-            clearable
-            flat
-            solo-inverted
-            hide-details
-            prepend-inner-icon="mdi-account-search"
-            label="Search"
-          ></v-text-field>
           <template v-if="$vuetify.breakpoint.mdAndUp">
+            <v-text-field
+              v-model="search"
+              clearable
+              flat
+              solo-inverted
+              hide-details
+              prepend-inner-icon="mdi-account-search"
+              label="Search"
+            ></v-text-field>
             <v-spacer></v-spacer>
             <v-select
               v-model="sortBy"
@@ -61,36 +64,36 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="item in props.items" :key="item.name">
-                <td>{{ item.name }}</td>
-                <td>{{ item.street }}</td>
-                <td>{{ item.city }}</td>
-                <td>{{ item.state }}</td>
-                <td>{{ item.zip }}</td>
+              <tr v-for="item in props.items" :key="item._id">
+                <td>
+                  <nuxt-link :to="'/customers/' + item._id">
+                    {{ item.name }}
+                  </nuxt-link>
+                </td>
+                <td>
+                  <nuxt-link :to="'/customers/' + item._id">
+                    {{ item.street }}
+                  </nuxt-link>
+                </td>
+                <td>
+                  <nuxt-link :to="'/customers/' + item._id">
+                    {{ item.city }}
+                  </nuxt-link>
+                </td>
+                <td>
+                  <nuxt-link :to="'/customers/' + item._id">
+                    {{ item.state }}
+                  </nuxt-link>
+                </td>
+                <td>
+                  <nuxt-link :to="'/customers/' + item._id">
+                    {{ item.zip }}
+                  </nuxt-link>
+                </td>
               </tr>
             </tbody>
           </template>
         </v-simple-table>
-        <!-- <v-card>
-              <v-card-title class="subheading font-weight-bold">{{
-                item.name
-              }}</v-card-title>
-
-              <v-divider></v-divider>
-
-              <v-list dense>
-                <v-list-item v-for="(key, index) in filteredKeys" :key="index">
-                  <v-list-item-content :class="{ 'blue--text': sortBy === key }"
-                    >{{ key }}:</v-list-item-content
-                  >
-                  <v-list-item-content
-                    class="align-end"
-                    :class="{ 'blue--text': sortBy === key }"
-                    >{{ item[key.toLowerCase()] }}</v-list-item-content
-                  >
-                </v-list-item>
-              </v-list>
-            </v-card> -->
       </template>
 
       <template v-slot:footer>
@@ -152,33 +155,13 @@ export default {
       page: 1,
       itemsPerPage: 4,
       sortBy: 'name',
-      keys: ['Name', 'Street', 'City', 'State', 'Zip'],
-      customers: [
-        {
-          name: 'Dave',
-          street: '123 Here',
-          city: 'Now',
-          state: 'OR',
-          zip: '97123'
-        },
-        {
-          name: 'Charlie',
-          street: '99 There',
-          city: 'Then',
-          state: 'OR',
-          zip: '97126'
-        },
-        {
-          name: 'Bob',
-          street: '5623 Everywhere',
-          city: 'Now',
-          state: 'OR',
-          zip: '97123'
-        }
-      ]
+      keys: ['Name', 'Street', 'City', 'State', 'Zip']
     }
   },
   computed: {
+    customers() {
+      return this.$store.state.customers.customers
+    },
     numberOfPages() {
       return Math.ceil(this.customers.length / this.itemsPerPage)
     },
