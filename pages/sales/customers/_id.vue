@@ -16,10 +16,7 @@ export default {
     try {
       await store.dispatch('customers/fetchCustomer', params.id)
     } catch (e) {
-      error({
-        statusCode: 503,
-        message: 'Unable to fetch event #' + params.id
-      })
+      error(e)
     }
   },
   computed: {
@@ -30,7 +27,7 @@ export default {
   methods: {
     saveHandler(formData) {
       const customer = { ...formData }
-      this.saveCustomer(customer).then(console.log('Customer Saved!'))
+      this.saveCustomer(customer).then(this.$router.push({ name: 'customers' }))
     },
     ...mapActions({
       saveCustomer: 'customers/saveCustomer'

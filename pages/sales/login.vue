@@ -64,19 +64,6 @@ export default {
       showPassword: false
     }
   },
-  head() {
-    return {
-      title: this.title,
-      meta: [
-        // hid is used as unique identifier. Do not use `vmid` for it as it will not work
-        {
-          hid: 'description',
-          name: 'description',
-          content: 'My custom description'
-        }
-      ]
-    }
-  },
   methods: {
     login() {
       this.$refs.loginForm.validate()
@@ -86,16 +73,16 @@ export default {
             .dispatch('auth/login', this.loginData)
             .then((authData) => {
               this.$router.push({
-                name: 'items'
+                name: 'sales-customers'
               })
             })
             .catch(() => {})
         } else {
-          const notification = {
-            type: 'error',
-            message: 'FORM IS INVALID'
-          }
-          this.$store.dispatch('notification/add', notification)
+          // const notification = {
+          //   type: 'error',
+          //   message: 'FORM IS INVALID'
+          // }
+          // this.$store.dispatch('notification/add', notification)
         }
       })
     },
@@ -107,6 +94,19 @@ export default {
           password: this.loginData.password
         }
       })
+    }
+  },
+  head() {
+    return {
+      title: this.title,
+      meta: [
+        // hid is used as unique identifier. Do not use `vmid` for it as it will not work
+        {
+          hid: 'description',
+          name: 'description',
+          content: 'My custom description'
+        }
+      ]
     }
   }
 }

@@ -44,6 +44,9 @@
                 <v-icon>mdi-arrow-down</v-icon>
               </v-btn>
             </v-btn-toggle>
+            <v-btn large color="blue" class="ml-2" @click="addCustomer">
+              <v-icon>mdi-plus</v-icon>
+            </v-btn>
           </template>
         </v-toolbar>
       </template>
@@ -66,27 +69,27 @@
             <tbody>
               <tr v-for="item in props.items" :key="item._id">
                 <td>
-                  <nuxt-link :to="'/customers/' + item._id">
+                  <nuxt-link :to="'/sales/customers/' + item._id">
                     {{ item.name }}
                   </nuxt-link>
                 </td>
                 <td>
-                  <nuxt-link :to="'/customers/' + item._id">
+                  <nuxt-link :to="'/sales/customers/' + item._id">
                     {{ item.street }}
                   </nuxt-link>
                 </td>
                 <td>
-                  <nuxt-link :to="'/customers/' + item._id">
+                  <nuxt-link :to="'/sales/customers/' + item._id">
                     {{ item.city }}
                   </nuxt-link>
                 </td>
                 <td>
-                  <nuxt-link :to="'/customers/' + item._id">
+                  <nuxt-link :to="'/sales/customers/' + item._id">
                     {{ item.state }}
                   </nuxt-link>
                 </td>
                 <td>
-                  <nuxt-link :to="'/customers/' + item._id">
+                  <nuxt-link :to="'/sales/customers/' + item._id">
                     {{ item.zip }}
                   </nuxt-link>
                 </td>
@@ -146,6 +149,13 @@
 <script>
 export default {
   name: 'Customers',
+  async fetch({ store, params, error }) {
+    try {
+      await store.dispatch('customers/fetchCustomers')
+    } catch (e) {
+      error(e)
+    }
+  },
   data() {
     return {
       itemsPerPageArray: [4, 8, 12],
@@ -170,6 +180,9 @@ export default {
     }
   },
   methods: {
+    addCustomer() {
+      this.$router.push({ name: 'customers-new' })
+    },
     nextPage() {
       if (this.page + 1 <= this.numberOfPages) this.page += 1
     },

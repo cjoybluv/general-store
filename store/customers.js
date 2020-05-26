@@ -1,32 +1,10 @@
-// import CustomerService from '@/services/CustomerService.js'
 import Vue from 'vue'
+// import CustomerService from '@/services/CustomerService.js'
+
+export const namespaced = true
+
 export const state = () => ({
-  customers: [
-    {
-      _id: '123',
-      name: 'Dave',
-      street: '123 Here',
-      city: 'Now',
-      state: 'OR',
-      zip: '97123'
-    },
-    {
-      _id: '124',
-      name: 'Charlie',
-      street: '99 There',
-      city: 'Then',
-      state: 'OR',
-      zip: '97126'
-    },
-    {
-      _id: '125',
-      name: 'Bob',
-      street: '5623 Everywhere',
-      city: 'Now',
-      state: 'OR',
-      zip: '97123'
-    }
-  ],
+  customers: [],
   customer: {}
 })
 export const mutations = {
@@ -46,27 +24,32 @@ export const mutations = {
 }
 export const actions = {
   fetchCustomers({ state, commit }) {
-    // return CustomerService.getcustomers().then((response) => {
+    // return CustomerService.getCustomers().then((response) => {
     //   commit('SET_CUSTOMERS', response.data)
     // })
-    return true
+    return this.$axios.get('/customers').then((response) => {
+      commit('SET_CUSTOMERS', response.data)
+    })
   },
   fetchCustomer({ commit, state }, id) {
-    // return CustomerService.getcustomer(id).then((response) => {
+    // return CustomerService.getCustomer(id).then((response) => {
     //   commit('SET_CUSTOMER', response.data)
     // })
-    commit(
-      'SET_CUSTOMER',
-      state.customers.find((customer) => customer._id === id)
-    )
-    return true
+    return this.$axios.get('/customers/' + id).then((response) => {
+      commit('SET_CUSTOMER', response.data)
+    })
   },
   saveCustomer({ commit }, customer) {
     if (customer._id) {
-      commit('UPDATE_CUSTOMER', customer)
+      return this.$axios
+        .put('/customers/' + customer._id, customer)
+        .then((response) => {
+          commit('UPDATE_CUSTOMER', response.data)
+        })
     } else {
-      commit('SAVE_CUSTOMER', customer)
+      return this.$axios.post('/customers', customer).then((response) => {
+        commit('SAVE_CUSTOMER', response.data)
+      })
     }
-    return true
   }
 }

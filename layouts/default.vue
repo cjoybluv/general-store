@@ -84,8 +84,13 @@ export default {
         },
         {
           icon: 'mdi-account',
+          title: 'Login',
+          to: '/sales/login'
+        },
+        {
+          icon: 'mdi-account',
           title: 'Customers',
-          to: '/customers'
+          to: '/sales/customers'
         }
       ],
       miniVariant: false,

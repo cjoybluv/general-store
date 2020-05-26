@@ -9,7 +9,12 @@
       </v-toolbar>
       <v-row class="px-2">
         <v-col class="py-0">
-          <v-text-field v-model="customer.name" placeholder="Name" dense />
+          <v-text-field
+            v-model="customer.name"
+            placeholder="Name"
+            dense
+            autofocus
+          />
         </v-col>
       </v-row>
       <v-row class="px-2">
