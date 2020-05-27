@@ -67,31 +67,25 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="item in props.items" :key="item._id">
+              <tr
+                v-for="item in props.items"
+                :key="item._id"
+                @click="openCustomer(item)"
+              >
                 <td>
-                  <nuxt-link :to="'/sales/customers/' + item._id">
-                    {{ item.name }}
-                  </nuxt-link>
+                  {{ item.name }}
                 </td>
                 <td>
-                  <nuxt-link :to="'/sales/customers/' + item._id">
-                    {{ item.street }}
-                  </nuxt-link>
+                  {{ item.street }}
                 </td>
                 <td>
-                  <nuxt-link :to="'/sales/customers/' + item._id">
-                    {{ item.city }}
-                  </nuxt-link>
+                  {{ item.city }}
                 </td>
                 <td>
-                  <nuxt-link :to="'/sales/customers/' + item._id">
-                    {{ item.state }}
-                  </nuxt-link>
+                  {{ item.state }}
                 </td>
                 <td>
-                  <nuxt-link :to="'/sales/customers/' + item._id">
-                    {{ item.zip }}
-                  </nuxt-link>
+                  {{ item.zip }}
                 </td>
               </tr>
             </tbody>
@@ -183,6 +177,9 @@ export default {
     addCustomer() {
       this.$router.push({ name: 'sales-customers-new' })
     },
+    openCustomer(customer) {
+      this.$router.push({ path: '/sales/customers/' + customer._id })
+    },
     nextPage() {
       if (this.page + 1 <= this.numberOfPages) this.page += 1
     },
@@ -196,4 +193,8 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+td {
+  cursor: pointer;
+}
+</style>
