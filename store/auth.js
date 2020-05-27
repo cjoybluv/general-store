@@ -52,7 +52,7 @@ export const mutations = {
 export const actions = {
   login({ commit, dispatch }, loginData) {
     commit('CLEAR_AUTH')
-    dispatch('clearUserData')
+    // dispatch('clearUserData')
     return new Promise((resolve, reject) => {
       this.$axios
         .$post('/auth/login', loginData)

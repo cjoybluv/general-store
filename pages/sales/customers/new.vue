@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <v-card width="500" class="mx-auto">
     <Customer :customer="customer" :save-handler="saveHandler" />
-  </div>
+  </v-card>
 </template>
 
 <script>
@@ -21,7 +21,7 @@ export default {
   methods: {
     saveHandler(formData) {
       this.saveCustomer({ ...formData }).then(
-        this.$router.push({ name: 'customers' })
+        this.$router.push({ name: 'sales-customers' })
       )
     },
     ...mapActions({

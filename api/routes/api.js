@@ -340,6 +340,7 @@ router.delete('/orders/:id', verifyToken, (req, res, next) => {
 
 function verifyToken(req, res, next) {
   const bearerHeader = req.headers.authorization
+  console.log('verifyToken >>>>', bearerHeader)
   if (typeof bearerHeader !== 'undefined') {
     const bearerToken = bearerHeader.split(' ')[1]
     req.token = bearerToken

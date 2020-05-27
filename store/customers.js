@@ -24,12 +24,14 @@ export const mutations = {
 }
 export const actions = {
   fetchCustomers({ state, commit }) {
-    // return CustomerService.getCustomers().then((response) => {
-    //   commit('SET_CUSTOMERS', response.data)
-    // })
-    return this.$axios.get('/customers').then((response) => {
-      commit('SET_CUSTOMERS', response.data)
-    })
+    return this.$axios
+      .get('/customers')
+      .then((response) => {
+        commit('SET_CUSTOMERS', response.data)
+      })
+      .catch((e) => {
+        console.log('fetchCustomers', e)
+      })
   },
   fetchCustomer({ commit, state }, id) {
     // return CustomerService.getCustomer(id).then((response) => {

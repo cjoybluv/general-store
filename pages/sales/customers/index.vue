@@ -181,7 +181,7 @@ export default {
   },
   methods: {
     addCustomer() {
-      this.$router.push({ name: 'customers-new' })
+      this.$router.push({ name: 'sales-customers-new' })
     },
     nextPage() {
       if (this.page + 1 <= this.numberOfPages) this.page += 1
