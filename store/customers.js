@@ -1,5 +1,4 @@
 import Vue from 'vue'
-// import CustomerService from '@/services/CustomerService.js'
 
 export const namespaced = true
 
@@ -34,9 +33,6 @@ export const actions = {
       })
   },
   fetchCustomer({ commit, state }, id) {
-    // return CustomerService.getCustomer(id).then((response) => {
-    //   commit('SET_CUSTOMER', response.data)
-    // })
     return this.$axios.get('/customers/' + id).then((response) => {
       commit('SET_CUSTOMER', response.data)
     })
