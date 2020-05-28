@@ -91,6 +91,11 @@ export default {
           icon: 'mdi-account',
           title: 'Customers',
           to: '/sales/customers'
+        },
+        {
+          icon: 'mdi-account',
+          title: 'Products',
+          to: '/sales/products'
         }
       ],
       miniVariant: false,
