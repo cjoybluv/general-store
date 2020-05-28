@@ -27,7 +27,9 @@ export default {
   methods: {
     saveHandler(formData) {
       const customer = { ...formData }
-      this.saveCustomer(customer).then(this.$router.push({ name: 'customers' }))
+      this.saveCustomer(customer).then(
+        this.$router.push({ name: 'sales-customers' })
+      )
     },
     ...mapActions({
       saveCustomer: 'customers/saveCustomer'
