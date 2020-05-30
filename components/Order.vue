@@ -48,6 +48,34 @@
     <v-form @submit.prevent="saveHandler(order)">
       <v-btn type="submit">Save</v-btn>
     </v-form>
+    <v-dialog v-model="customerConfirmDialog" dense fixed-header width="800">
+      <v-simple-table>
+        <template>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Street</th>
+              <th>City</th>
+              <th>St</th>
+              <th>Zip</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="cust in customerMatches"
+              :key="cust._id"
+              @click="selectCustomer(cust)"
+            >
+              <td>{{ cust.name }}</td>
+              <td>{{ cust.street }}</td>
+              <td>{{ cust.city }}</td>
+              <td>{{ cust.state }}</td>
+              <td>{{ cust.zip }}</td>
+            </tr>
+          </tbody>
+        </template>
+      </v-simple-table>
+    </v-dialog>
   </div>
 </template>
 
@@ -69,7 +97,9 @@ export default {
     return {
       customer: {
         name: ''
-      }
+      },
+      customerMatches: [],
+      customerConfirmDialog: false
     }
   },
   computed: {
@@ -82,22 +112,19 @@ export default {
   },
   methods: {
     customerLookup() {
-      const matches = this.customerSearch.filter((cust) => {
+      const searchMatches = this.customerSearch.filter((cust) => {
         const rec = cust.record.toLowerCase()
         return rec.includes(this.customer.name.toLowerCase())
       })
-      switch (matches.length) {
-        case 0:
-          alert('no customer match found')
-          break
-        case 1:
-          this.customer = this.customers.find(
-            (cust) => matches[0]._id === cust._id
-          )
-          break
-        default:
-          alert('more than 1 match found')
-      }
+      this.customerMatches = this.customers.filter((customer) => {
+        return searchMatches.find((match) => match._id === customer._id)
+      })
+      this.customerConfirmDialog = true
+    },
+    selectCustomer(cust) {
+      this.customer = { ...cust }
+      this.order.customerId = cust._id
+      this.customerConfirmDialog = false
     }
   }
 }

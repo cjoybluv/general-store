@@ -9,7 +9,7 @@ import { mapActions } from 'vuex'
 import Order from '@/components/Order.vue'
 
 export default {
-  name: 'NewCustomer',
+  name: 'NewOrder',
   components: {
     Order
   },
