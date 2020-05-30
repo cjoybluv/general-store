@@ -26,6 +26,11 @@
           </v-col>
         </v-row>
         <v-row class="px-2">
+          <v-col class="py-0">
+            <v-text-field v-model="customer.street" dense readonly />
+          </v-col>
+        </v-row>
+        <v-row class="px-2">
           <v-col cols="12" sm="6" class="py-0">
             <v-text-field v-model="customer.city" placeholder="City" dense />
           </v-col>
@@ -47,6 +52,8 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
   props: {
     order: {
@@ -65,10 +72,32 @@ export default {
       }
     }
   },
+  computed: {
+    customers() {
+      return this.$store.state.customers.customers
+    },
+    ...mapGetters({
+      customerSearch: 'customers/customerSearch'
+    })
+  },
   methods: {
     customerLookup() {
-      console.log('customerLookup', this.customer)
-      // if (e) e.preventDefault()
+      const matches = this.customerSearch.filter((cust) => {
+        const rec = cust.record.toLowerCase()
+        return rec.includes(this.customer.name.toLowerCase())
+      })
+      switch (matches.length) {
+        case 0:
+          alert('no customer match found')
+          break
+        case 1:
+          this.customer = this.customers.find(
+            (cust) => matches[0]._id === cust._id
+          )
+          break
+        default:
+          alert('more than 1 match found')
+      }
     }
   }
 }

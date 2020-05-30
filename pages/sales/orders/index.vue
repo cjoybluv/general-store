@@ -142,6 +142,8 @@ export default {
   name: 'Orders',
   async fetch({ store, params, error }) {
     try {
+      await store.dispatch('customers/fetchCustomers')
+      await store.dispatch('products/fetchProducts')
       await store.dispatch('orders/fetchOrders')
     } catch (e) {
       error(e)

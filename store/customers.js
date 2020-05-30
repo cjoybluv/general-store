@@ -6,6 +6,23 @@ export const state = () => ({
   customers: [],
   customer: {}
 })
+
+export const getters = {
+  customerSearch: (state) => {
+    return state.customers.map((customer) => {
+      return {
+        _id: customer._id,
+        record:
+          customer.name +
+          customer.street +
+          customer.city +
+          customer.state +
+          customer.zip
+      }
+    })
+  }
+}
+
 export const mutations = {
   SAVE_CUSTOMER(state, customer) {
     state.customers.push(customer)
@@ -21,6 +38,7 @@ export const mutations = {
     Vue.set(state.customers, idx, { ...customer })
   }
 }
+
 export const actions = {
   fetchCustomers({ state, commit }) {
     return this.$axios
