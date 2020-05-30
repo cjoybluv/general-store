@@ -9,24 +9,20 @@ import { mapActions } from 'vuex'
 import Order from '@/components/Order.vue'
 
 export default {
-  name: 'NewOrder',
+  name: 'OrderForm',
   components: {
     Order
   },
   async fetch({ store, params, error }) {
     try {
-      await store.dispatch('orders/getNewOrderNo')
+      await store.dispatch('orders/fetchOrder', params.id)
     } catch (e) {
       error(e)
     }
   },
   computed: {
-    nextOrderNo() {
-      return this.$store.state.orders.nextOrderNo
-    },
     order() {
-      const today = new Date().toISOString()
-      return { orderNo: this.nextOrderNo, dateOrdered: today }
+      return { ...this.$store.state.orders.order }
     }
   },
   methods: {

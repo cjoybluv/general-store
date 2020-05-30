@@ -42,7 +42,15 @@
           </v-col>
         </v-row>
       </v-col>
-      <v-col cols="12" sm="6">right</v-col>
+      <v-col cols="12" sm="6">
+        <v-text-field
+          v-model="oDates.dateOrdered"
+          label="Date Ordered"
+          prepend-inner-icon="mdi-calendar"
+          readonly
+          @click="pickDate('dateOrdered')"
+        />
+      </v-col>
     </v-row>
 
     <v-form @submit.prevent="saveHandler(order)">
@@ -79,6 +87,9 @@
         </template>
       </v-simple-table>
     </v-dialog>
+    <v-dialog v-model="datePicker" width="300">
+      <v-date-picker v-model="pickerDate" @click:date="datePicked" />
+    </v-dialog>
   </div>
 </template>
 
@@ -102,7 +113,13 @@ export default {
         name: ''
       },
       customerMatches: [],
-      customerConfirmDialog: false
+      customerConfirmDialog: false,
+      oDates: {
+        dateOrdered: this.dateFormat(this.order.dateOrdered)
+      },
+      datePicker: false,
+      pickerDate: '',
+      pickerField: ''
     }
   },
   computed: {
@@ -124,9 +141,33 @@ export default {
       })
       this.customerConfirmDialog = true
     },
+    dateFormat(dateIn) {
+      if (dateIn) {
+        if (typeof dateIn === 'string') dateIn = new Date(dateIn)
+        return dateIn.toLocaleDateString()
+      } else {
+        return ''
+      }
+    },
+    datePicked() {
+      this.order[this.pickerField] = new Date(this.pickerDate + ' 12:00:00')
+      this.oDates[this.pickerField] = this.dateFormat(
+        this.order[this.pickerField]
+      )
+      this.pickerField = ''
+      this.datePicker = false
+    },
+    pickDate(dateField) {
+      this.pickerField = dateField
+      this.pickerDate = new Date(this.order[dateField])
+        .toISOString()
+        .substr(0, 10)
+      this.datePicker = true
+    },
     selectCustomer(cust) {
       this.customer = { ...cust }
       this.order.customerId = cust._id
+      this.order.customerName = cust.name
       this.customerConfirmDialog = false
     }
   }

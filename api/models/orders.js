@@ -15,7 +15,6 @@ const OrderSchema = new Schema({
     type: Date,
     required: [true, 'order.dateOrdered is required']
   },
-  dateFilled: Date,
   dateShipped: Date,
   products: [
     {
