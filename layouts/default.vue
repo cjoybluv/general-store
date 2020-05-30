@@ -83,9 +83,14 @@ export default {
           to: '/inspire'
         },
         {
-          icon: 'mdi-account',
+          icon: 'mdi-login',
           title: 'Login',
           to: '/sales/login'
+        },
+        {
+          icon: 'mdi-phone-log',
+          title: 'Orders',
+          to: '/sales/orders'
         },
         {
           icon: 'mdi-account',
@@ -93,7 +98,7 @@ export default {
           to: '/sales/customers'
         },
         {
-          icon: 'mdi-account',
+          icon: 'mdi-cart',
           title: 'Products',
           to: '/sales/products'
         }
