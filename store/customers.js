@@ -33,9 +33,14 @@ export const actions = {
       })
   },
   fetchCustomer({ commit, state }, id) {
-    return this.$axios.get('/customers/' + id).then((response) => {
-      commit('SET_CUSTOMER', response.data)
-    })
+    return this.$axios
+      .get('/customers/' + id)
+      .then((response) => {
+        commit('SET_CUSTOMER', response.data)
+      })
+      .catch((e) => {
+        console.log('fetchCustomer', e)
+      })
   },
   saveCustomer({ commit }, customer) {
     if (customer._id) {

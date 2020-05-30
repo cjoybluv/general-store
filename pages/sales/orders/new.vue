@@ -13,11 +13,19 @@ export default {
   components: {
     Order
   },
-  data() {
-    return {
-      order: {
-        orderNo: 'NEW'
-      }
+  async fetch({ store, params, error }) {
+    try {
+      await store.dispatch('orders/getNewOrderNo')
+    } catch (e) {
+      error(e)
+    }
+  },
+  computed: {
+    nextOrderNo() {
+      return this.$store.state.orders.nextOrderNo
+    },
+    order() {
+      return { orderNo: this.nextOrderNo }
     }
   },
   methods: {

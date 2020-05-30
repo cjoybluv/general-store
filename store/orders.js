@@ -4,11 +4,16 @@ export const namespaced = true
 
 export const state = () => ({
   orders: [],
-  order: {}
+  order: {},
+  nextOrderNo: ''
 })
+
 export const mutations = {
   SAVE_ORDER(state, order) {
     state.orders.push(order)
+  },
+  SET_NEXT_ORDER_NO(state, nextOrderNo) {
+    state.nextOrderNo = nextOrderNo
   },
   SET_ORDERS(state, orders) {
     state.orders = orders
@@ -21,6 +26,7 @@ export const mutations = {
     Vue.set(state.orders, idx, { ...order })
   }
 }
+
 export const actions = {
   fetchOrders({ state, commit }) {
     return this.$axios
@@ -29,13 +35,18 @@ export const actions = {
         commit('SET_ORDERS', response.data)
       })
       .catch((e) => {
-        console.log('fetchProducts', e)
+        console.log('fetchOrders', e)
       })
   },
   fetchOrder({ commit, state }, id) {
-    return this.$axios.get('/orders/' + id).then((response) => {
-      commit('SET_ORDER', response.data)
-    })
+    return this.$axios
+      .get('/orders/' + id)
+      .then((response) => {
+        commit('SET_ORDER', response.data)
+      })
+      .catch((e) => {
+        console.log('fetchOrder', e)
+      })
   },
   saveOrder({ commit }, order) {
     if (order._id) {
@@ -47,5 +58,15 @@ export const actions = {
         commit('SAVE_ORDER', response.data)
       })
     }
+  },
+  getNewOrderNo({ commit }) {
+    return this.$axios
+      .get('/appData/newOrderNo')
+      .then((response) => {
+        commit('SET_NEXT_ORDER_NO', response.data.data)
+      })
+      .catch((e) => {
+        console.log('getNewOrderNo', e)
+      })
   }
 }
