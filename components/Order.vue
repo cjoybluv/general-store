@@ -49,6 +49,9 @@
       <v-btn type="submit">Save</v-btn>
     </v-form>
     <v-dialog v-model="customerConfirmDialog" dense fixed-header width="800">
+      <v-system-bar height="48" window>
+        <span class="display-1">Select a Customer</span>
+      </v-system-bar>
       <v-simple-table>
         <template>
           <thead>
@@ -133,5 +136,8 @@ export default {
 <style lang="scss" scoped>
 .right-border {
   border-right: 1px solid lightgrey;
+}
+td {
+  cursor: pointer;
 }
 </style>
