@@ -45,23 +45,27 @@
       <v-col cols="12" sm="6">
         <v-row>
           <v-col cols="12" sm="6">
-            <v-text-field
-              v-model="oDates.dateOrdered"
-              label="Date Ordered"
-              prepend-inner-icon="mdi-calendar"
-              readonly
-              @click="pickDate('dateOrdered')"
-            />
+            <v-row
+              ><v-text-field
+                v-model="oDates.dateOrdered"
+                label="Date Ordered"
+                class="mx-2"
+                prepend-inner-icon="mdi-calendar"
+                readonly
+                @click="pickDate('dateOrdered')"
+            /></v-row>
+            <v-row
+              ><v-text-field
+                v-model="oDates.dateShipped"
+                label="Date Shipped"
+                class="mx-2"
+                prepend-inner-icon="mdi-calendar"
+                readonly
+                @click="pickDate('dateShipped')"
+            /></v-row>
           </v-col>
           <v-col cols="12" sm="6">
-            <v-text-field
-              v-model="oDates.dateShipped"
-              label="Date Shipped"
-              class="mr-2"
-              prepend-inner-icon="mdi-calendar"
-              readonly
-              @click="pickDate('dateShipped')"
-            />
+            Paid: {{ order.totalPaid }} Balance: {{ order.balance }}
           </v-col>
         </v-row>
       </v-col>

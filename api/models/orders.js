@@ -1,33 +1,45 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-const OrderSchema = new Schema({
-  orderNo: {
-    type: Number,
-    required: [true, 'order.orderNo is required']
+const opts = { toJSON: { virtuals: true } }
+
+const OrderSchema = new Schema(
+  {
+    orderNo: {
+      type: Number,
+      required: [true, 'order.orderNo is required']
+    },
+    customerId: {
+      type: Schema.Types.ObjectId,
+      required: [true, 'order.customerId is required']
+    },
+    customerName: String,
+    dateOrdered: {
+      type: Date,
+      required: [true, 'order.dateOrdered is required']
+    },
+    dateShipped: Date,
+    products: [
+      {
+        productId: {
+          type: Schema.Types.ObjectId
+        },
+        productCode: String,
+        quantity: Number,
+        unitPrice: Number,
+        extendedPrice: Number
+      }
+    ],
+    totalPrice: Number,
+    paymentTerms: String,
+    paymentMethod: String,
+    totalPaid: Number
   },
-  customerId: {
-    type: Schema.Types.ObjectId,
-    required: [true, 'order.customerId is required']
-  },
-  customerName: String,
-  dateOrdered: {
-    type: Date,
-    required: [true, 'order.dateOrdered is required']
-  },
-  dateShipped: Date,
-  products: [
-    {
-      productId: {
-        type: Schema.Types.ObjectId
-      },
-      productCode: String,
-      quantity: Number,
-      unitPrice: Number,
-      extendedPrice: Number
-    }
-  ],
-  totalPrice: Number
+  opts
+)
+
+OrderSchema.virtual('balance').get(function() {
+  return this.totalPrice - this.totalPaid
 })
 
 const Order = mongoose.model('order', OrderSchema)
