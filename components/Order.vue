@@ -87,8 +87,13 @@
         </template>
       </v-simple-table>
     </v-dialog>
-    <v-dialog v-model="datePicker" width="300">
-      <v-date-picker v-model="pickerDate" @click:date="datePicked" />
+    <v-dialog v-model="datePickerData.flag" width="300">
+      <v-app-bar>
+        <v-toolbar-title>
+          {{ datePickerData.titles[datePickerData.field] }}
+        </v-toolbar-title>
+      </v-app-bar>
+      <v-date-picker v-model="datePickerData.date" @click:date="datePicked" />
     </v-dialog>
   </div>
 </template>
@@ -117,9 +122,15 @@ export default {
       oDates: {
         dateOrdered: this.dateFormat(this.order.dateOrdered)
       },
-      datePicker: false,
-      pickerDate: '',
-      pickerField: ''
+      datePickerData: {
+        flag: false,
+        date: '',
+        field: '',
+        titles: {
+          dateOrdered: 'Date Ordered',
+          dateShipped: 'Date Shipped'
+        }
+      }
     }
   },
   computed: {
@@ -143,26 +154,27 @@ export default {
     },
     dateFormat(dateIn) {
       if (dateIn) {
-        if (typeof dateIn === 'string') dateIn = new Date(dateIn)
-        return dateIn.toLocaleDateString()
+        return new Date(dateIn).toLocaleDateString()
       } else {
         return ''
       }
     },
     datePicked() {
-      this.order[this.pickerField] = new Date(this.pickerDate + ' 12:00:00')
-      this.oDates[this.pickerField] = this.dateFormat(
-        this.order[this.pickerField]
+      this.order[this.datePickerData.field] = new Date(
+        this.datePickerData.date + ' 12:00:00'
       )
-      this.pickerField = ''
-      this.datePicker = false
+      this.oDates[this.datePickerData.field] = this.dateFormat(
+        this.order[this.datePickerData.field]
+      )
+      this.datePickerData.field = ''
+      this.datePickerData.flag = false
     },
     pickDate(dateField) {
-      this.pickerField = dateField
-      this.pickerDate = new Date(this.order[dateField])
+      this.datePickerData.field = dateField
+      this.datePickerData.date = new Date(this.order[dateField])
         .toISOString()
         .substr(0, 10)
-      this.datePicker = true
+      this.datePickerData.flag = true
     },
     selectCustomer(cust) {
       this.customer = { ...cust }
