@@ -43,19 +43,74 @@
         </v-row>
       </v-col>
       <v-col cols="12" sm="6">
-        <v-text-field
-          v-model="oDates.dateOrdered"
-          label="Date Ordered"
-          prepend-inner-icon="mdi-calendar"
-          readonly
-          @click="pickDate('dateOrdered')"
-        />
+        <v-row>
+          <v-col cols="12" sm="6">
+            <v-text-field
+              v-model="oDates.dateOrdered"
+              label="Date Ordered"
+              prepend-inner-icon="mdi-calendar"
+              readonly
+              @click="pickDate('dateOrdered')"
+            />
+          </v-col>
+          <v-col cols="12" sm="6">
+            <v-text-field
+              v-model="oDates.dateShipped"
+              label="Date Shipped"
+              class="mr-2"
+              prepend-inner-icon="mdi-calendar"
+              readonly
+              @click="pickDate('dateShipped')"
+            />
+          </v-col>
+        </v-row>
+      </v-col>
+    </v-row>
+
+    <v-row class="mx-2 border-top">
+      <v-col cols="12">
+        <v-simple-table>
+          <template>
+            <thead>
+              <tr>
+                <th>Code</th>
+                <th>Description</th>
+                <th>Unit</th>
+                <th class="text-right">Price</th>
+                <th class="text-right">Quantity</th>
+                <th class="text-right">Extended Price</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                v-for="lineItem in product.lineItems"
+                :key="lineItem.productId"
+              >
+                <td>
+                  <v-text-field
+                    v-model="lineItem.productCode"
+                    placeholder="Product Lookup"
+                    dense
+                    @change="productLookup"
+                  />
+                </td>
+                <td>{{ lineItem.description }}</td>
+                <td>{{ lineItem.unit }}</td>
+                <td class="text-right">{{ lineItem.unitPrice }}</td>
+                <td class="text-right">{{ lineItem.quantity }}</td>
+                <td class="text-right">{{ lineItem.extendedPrice }}</td>
+              </tr>
+            </tbody>
+          </template>
+        </v-simple-table>
       </v-col>
     </v-row>
 
     <v-form @submit.prevent="saveHandler(order)">
       <v-btn type="submit">Save</v-btn>
     </v-form>
+
+    <!-- DIALOGS  -->
     <v-dialog v-model="customerConfirmDialog" dense fixed-header width="800">
       <v-system-bar height="48" window>
         <span class="display-1">Select a Customer</span>
@@ -119,7 +174,8 @@ export default {
       customerMatches: [],
       customerConfirmDialog: false,
       oDates: {
-        dateOrdered: dateOut(this.order.dateOrdered)
+        dateOrdered: dateOut(this.order.dateOrdered),
+        dateShipped: dateOut(this.order.dateShipped)
       },
       datePickerData: {
         flag: false,
@@ -129,6 +185,10 @@ export default {
           dateOrdered: 'Date Ordered',
           dateShipped: 'Date Shipped'
         }
+      },
+      product: {
+        lookup: '',
+        lineItems: []
       }
     }
   },
@@ -136,14 +196,25 @@ export default {
     customers() {
       return this.$store.state.customers.customers
     },
+    products() {
+      return this.$store.state.products.products
+    },
     ...mapGetters({
       getCustomer: 'customers/getById',
-      customerSearch: 'customers/customerSearch'
+      customerSearch: 'customers/customerSearch',
+      getProduct: 'products/getById',
+      productSearch: 'products/productSearch'
     })
   },
   mounted() {
     if (this.order.customerId) {
       this.customer = { ...this.getCustomer(this.order.customerId) }
+    }
+    if (this.order.products) {
+      this.product.lineItems = this.order.products.map((prod) => {
+        const p = this.getProduct(prod.productId)
+        return { ...prod, description: p.description, unit: p.unit }
+      })
     }
   },
   methods: {
@@ -169,10 +240,24 @@ export default {
     },
     pickDate(dateField) {
       this.datePickerData.field = dateField
-      this.datePickerData.date = new Date(this.order[dateField])
-        .toISOString()
-        .substr(0, 10)
+      let date
+      if (this.order[dateField]) {
+        date = new Date(this.order[dateField])
+      } else {
+        date = new Date()
+      }
+      this.datePickerData.date = date.toISOString().substr(0, 10)
       this.datePickerData.flag = true
+    },
+    productLookup() {
+      const searchMatches = this.productSearch.filter((prod) => {
+        const rec = prod.record.toLowerCase()
+        return rec.includes(this.order.customerName.toLowerCase())
+      })
+      this.customerMatches = this.customers.filter((customer) => {
+        return searchMatches.find((match) => match._id === customer._id)
+      })
+      this.customerConfirmDialog = true
     },
     selectCustomer(cust) {
       this.customer = { ...cust }
@@ -185,10 +270,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.right-border {
-  border-right: 1px solid lightgrey;
-}
 td {
   cursor: pointer;
+}
+.border-top {
+  border-top: 1px solid lightgrey;
+}
+.right-border {
+  border-right: 1px solid lightgrey;
 }
 </style>

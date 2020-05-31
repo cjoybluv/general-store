@@ -82,6 +82,9 @@
                   {{ dateOut(item.dateOrdered) }}
                 </td>
                 <td>
+                  {{ dateOut(item.dateShipped) }}
+                </td>
+                <td>
                   {{ item.totalPrice }}
                 </td>
               </tr>
@@ -160,7 +163,13 @@ export default {
       page: 1,
       itemsPerPage: 4,
       sortBy: 'name',
-      keys: ['Order#', 'CustomerName', 'Date Ordered', 'Total Price']
+      keys: [
+        'Order#',
+        'CustomerName',
+        'Date Ordered',
+        'Date Shipped',
+        'Total Price'
+      ]
     }
   },
   computed: {

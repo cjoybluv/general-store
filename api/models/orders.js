@@ -22,7 +22,7 @@ const OrderSchema = new Schema({
         type: Schema.Types.ObjectId
       },
       quantity: Number,
-      listPrice: Number,
+      unitPrice: Number,
       extendedPrice: Number
     }
   ],

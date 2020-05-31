@@ -1,4 +1,8 @@
 export function dateOut(dateIn) {
   // dateIn inbound as mongo ISO format
-  return new Date(dateIn).toLocaleDateString()
+  if (dateIn) {
+    return new Date(dateIn).toLocaleDateString()
+  } else {
+    return ''
+  }
 }
