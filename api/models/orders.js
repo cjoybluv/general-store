@@ -9,9 +9,10 @@ const OrderSchema = new Schema(
       type: Number,
       required: [true, 'order.orderNo is required']
     },
-    customerId: {
+    customer: {
       type: Schema.Types.ObjectId,
-      required: [true, 'order.customerId is required']
+      ref: 'Customer',
+      required: [true, 'order.customer is required']
     },
     customerName: String,
     dateOrdered: {
@@ -21,8 +22,9 @@ const OrderSchema = new Schema(
     dateShipped: Date,
     products: [
       {
-        productId: {
-          type: Schema.Types.ObjectId
+        product: {
+          type: Schema.Types.ObjectId,
+          ref: 'Product'
         },
         productCode: String,
         quantity: Number,

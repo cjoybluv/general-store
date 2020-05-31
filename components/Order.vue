@@ -88,7 +88,7 @@
             <tbody>
               <tr
                 v-for="(lineItem, index) in product.lineItems"
-                :key="lineItem.productId"
+                :key="lineItem.product"
               >
                 <td>{{ lineItem.productCode }}</td>
                 <td>{{ lineItem.description }}</td>
@@ -263,12 +263,12 @@ export default {
     })
   },
   mounted() {
-    if (this.order.customerId) {
-      this.customer = { ...this.getCustomer(this.order.customerId) }
+    if (this.order.customer) {
+      this.customer = { ...this.getCustomer(this.order.customer) }
     }
     if (this.order.products) {
       this.product.lineItems = this.order.products.map((prod) => {
-        const p = this.getProduct(prod.productId)
+        const p = this.getProduct(prod.product)
         return { ...prod, description: p.description, unit: p.unit }
       })
     }
@@ -317,20 +317,20 @@ export default {
     },
     selectCustomer(cust) {
       this.customer = { ...cust }
-      this.order.customerId = cust._id
+      this.order.customer = cust._id
       this.order.customerName = cust.name
       this.customerConfirmDialog = false
     },
     selectProduct(prod) {
       this.product.lineItems.push({
-        productId: prod._id,
+        product: prod._id,
         productCode: prod.code,
         description: prod.description,
         unit: prod.unit,
         unitPrice: prod.price
       })
       this.order.products.push({
-        productId: prod._id,
+        product: prod._id,
         productCode: prod.code,
         unitPrice: prod.price
       })
