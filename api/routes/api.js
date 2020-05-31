@@ -275,6 +275,7 @@ router.get('/orders/:id', verifyToken, (req, res, next) => {
       res.sendStatus(403)
     } else {
       Order.findById(req.params.id)
+        .populate('customer')
         .then((order) => {
           res.json(order)
         })

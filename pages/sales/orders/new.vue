@@ -26,7 +26,12 @@ export default {
     },
     order() {
       const today = new Date().toISOString()
-      return { orderNo: this.nextOrderNo, dateOrdered: today }
+      return {
+        orderNo: this.nextOrderNo,
+        dateOrdered: today,
+        customer: {},
+        products: []
+      }
     }
   },
   methods: {

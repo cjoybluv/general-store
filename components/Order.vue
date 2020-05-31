@@ -27,18 +27,30 @@
         </v-row>
         <v-row class="px-2">
           <v-col class="py-0">
-            <v-text-field v-model="customer.street" dense readonly />
+            <v-text-field v-model="order.customer.street" dense readonly />
           </v-col>
         </v-row>
         <v-row class="px-2">
           <v-col cols="12" sm="6" class="py-0">
-            <v-text-field v-model="customer.city" placeholder="City" dense />
+            <v-text-field
+              v-model="order.customer.city"
+              placeholder="City"
+              dense
+            />
           </v-col>
           <v-col cols="12" sm="2" class="py-0">
-            <v-text-field v-model="customer.state" placeholder="ST" dense />
+            <v-text-field
+              v-model="order.customer.state"
+              placeholder="ST"
+              dense
+            />
           </v-col>
           <v-col cols="12" sm="4" class="py-0">
-            <v-text-field v-model="customer.zip" placeholder="Zip" dense />
+            <v-text-field
+              v-model="order.customer.zip"
+              placeholder="Zip"
+              dense
+            />
           </v-col>
         </v-row>
       </v-col>
@@ -316,8 +328,7 @@ export default {
       this.product.dialog = true
     },
     selectCustomer(cust) {
-      this.customer = { ...cust }
-      this.order.customer = cust._id
+      this.order.customer = { ...cust }
       this.order.customerName = cust.name
       this.customerConfirmDialog = false
     },
