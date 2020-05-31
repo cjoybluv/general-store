@@ -17,7 +17,7 @@
         <v-row class="px-2">
           <v-col class="py-0">
             <v-text-field
-              v-model="customer.name"
+              v-model="order.customerName"
               placeholder="Customer Name / Lookup"
               dense
               autofocus
@@ -114,9 +114,7 @@ export default {
   },
   data() {
     return {
-      customer: {
-        name: ''
-      },
+      customer: {},
       customerMatches: [],
       customerConfirmDialog: false,
       oDates: {
@@ -138,14 +136,20 @@ export default {
       return this.$store.state.customers.customers
     },
     ...mapGetters({
+      getCustomer: 'customers/getById',
       customerSearch: 'customers/customerSearch'
     })
+  },
+  mounted() {
+    if (this.order.customerId) {
+      this.customer = { ...this.getCustomer(this.order.customerId) }
+    }
   },
   methods: {
     customerLookup() {
       const searchMatches = this.customerSearch.filter((cust) => {
         const rec = cust.record.toLowerCase()
-        return rec.includes(this.customer.name.toLowerCase())
+        return rec.includes(this.order.customerName.toLowerCase())
       })
       this.customerMatches = this.customers.filter((customer) => {
         return searchMatches.find((match) => match._id === customer._id)

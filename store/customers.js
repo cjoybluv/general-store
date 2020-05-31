@@ -20,6 +20,14 @@ export const getters = {
           customer.zip
       }
     })
+  },
+  getById: (state) => (id) => {
+    return (
+      state.customers &&
+      state.customers.filter((customer) => {
+        return customer._id === id
+      })[0]
+    )
   }
 }
 
