@@ -83,22 +83,38 @@
             </thead>
             <tbody>
               <tr
-                v-for="lineItem in product.lineItems"
+                v-for="(lineItem, index) in product.lineItems"
                 :key="lineItem.productId"
               >
+                <td>{{ lineItem.productCode }}</td>
+                <td>{{ lineItem.description }}</td>
+                <td>{{ lineItem.unit }}</td>
+                <td class="text-right">{{ lineItem.unitPrice }}</td>
+                <td class="text-right">
+                  <v-text-field
+                    v-model="lineItem.quantity"
+                    placeholder="Enter Quantity"
+                    autofocus
+                    dense
+                    @change="quantityUpdate(lineItem, index)"
+                  />
+                </td>
+                <td class="text-right">{{ lineItem.extendedPrice }}</td>
+              </tr>
+              <tr>
                 <td>
                   <v-text-field
-                    v-model="lineItem.productCode"
+                    v-model="product.lookup"
                     placeholder="Product Lookup"
                     dense
                     @change="productLookup"
                   />
                 </td>
-                <td>{{ lineItem.description }}</td>
-                <td>{{ lineItem.unit }}</td>
-                <td class="text-right">{{ lineItem.unitPrice }}</td>
-                <td class="text-right">{{ lineItem.quantity }}</td>
-                <td class="text-right">{{ lineItem.extendedPrice }}</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td class="text-right">{{ order.totalPrice }}</td>
               </tr>
             </tbody>
           </template>
@@ -142,6 +158,7 @@
         </template>
       </v-simple-table>
     </v-dialog>
+
     <v-dialog v-model="datePickerData.flag" width="300">
       <v-app-bar>
         <v-toolbar-title>
@@ -150,10 +167,41 @@
       </v-app-bar>
       <v-date-picker v-model="datePickerData.date" @click:date="datePicked" />
     </v-dialog>
+
+    <v-dialog v-model="product.dialog" dense fixed-header width="800">
+      <v-system-bar height="48" window>
+        <span class="display-1">Select a Product</span>
+      </v-system-bar>
+      <v-simple-table>
+        <template>
+          <thead>
+            <tr>
+              <th>Code</th>
+              <th>Description</th>
+              <th>Unit</th>
+              <th class="text-right">Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="prod in product.matches"
+              :key="prod._id"
+              @click="selectProduct(prod)"
+            >
+              <td>{{ prod.code }}</td>
+              <td>{{ prod.description }}</td>
+              <td>{{ prod.unit }}</td>
+              <td class="text-right">{{ prod.price }}</td>
+            </tr>
+          </tbody>
+        </template>
+      </v-simple-table>
+    </v-dialog>
   </div>
 </template>
 
 <script>
+import Vue from 'vue'
 import { mapGetters } from 'vuex'
 import { dateOut } from '@/helpers/dateHelpers'
 
@@ -187,8 +235,10 @@ export default {
         }
       },
       product: {
+        lineItems: [],
         lookup: '',
-        lineItems: []
+        matches: [],
+        dialog: false
       }
     }
   },
@@ -252,18 +302,59 @@ export default {
     productLookup() {
       const searchMatches = this.productSearch.filter((prod) => {
         const rec = prod.record.toLowerCase()
-        return rec.includes(this.order.customerName.toLowerCase())
+        return rec.includes(this.product.lookup.toLowerCase())
       })
-      this.customerMatches = this.customers.filter((customer) => {
-        return searchMatches.find((match) => match._id === customer._id)
+      this.product.matches = this.products.filter((product) => {
+        return searchMatches.find((match) => match._id === product._id)
       })
-      this.customerConfirmDialog = true
+      this.product.dialog = true
     },
     selectCustomer(cust) {
       this.customer = { ...cust }
       this.order.customerId = cust._id
       this.order.customerName = cust.name
       this.customerConfirmDialog = false
+    },
+    selectProduct(prod) {
+      this.product.lineItems.push({
+        productId: prod._id,
+        productCode: prod.code,
+        description: prod.description,
+        unit: prod.unit,
+        unitPrice: prod.price
+      })
+      this.order.products.push({
+        productId: prod._id,
+        productCode: prod.code,
+        unitPrice: prod.price
+      })
+      this.product.lookup = ''
+      this.product.dialog = false
+      this.$nextTick()
+    },
+    sumTotal(total, amt) {
+      return {
+        extendedPrice:
+          parseFloat(total.extendedPrice) + parseFloat(amt.extendedPrice)
+      }
+    },
+    quantityUpdate(lineItem, index) {
+      const extendedPrice = (
+        parseFloat(lineItem.unitPrice).toFixed(2) *
+        parseFloat(lineItem.quantity)
+      ).toFixed(2)
+      Vue.set(this.order.products, index, {
+        ...this.order.products[index],
+        quantity: lineItem.quantity,
+        extendedPrice
+      })
+      Vue.set(this.product.lineItems, index, {
+        ...lineItem,
+        extendedPrice
+      })
+      this.order.totalPrice = this.product.lineItems.reduce(
+        this.sumTotal
+      ).extendedPrice
     }
   }
 }

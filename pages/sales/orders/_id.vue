@@ -6,6 +6,7 @@
 
 <script>
 import { mapActions } from 'vuex'
+import cloneDeep from 'lodash.clonedeep'
 import Order from '@/components/Order.vue'
 
 export default {
@@ -22,7 +23,7 @@ export default {
   },
   computed: {
     order() {
-      return { ...this.$store.state.orders.order }
+      return cloneDeep(this.$store.state.orders.order)
     }
   },
   methods: {

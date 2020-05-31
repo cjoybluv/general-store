@@ -21,6 +21,7 @@ const OrderSchema = new Schema({
       productId: {
         type: Schema.Types.ObjectId
       },
+      productCode: String,
       quantity: Number,
       unitPrice: Number,
       extendedPrice: Number
