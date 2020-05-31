@@ -113,8 +113,10 @@
                 <td></td>
                 <td></td>
                 <td></td>
-                <td></td>
-                <td class="text-right">{{ order.totalPrice }}</td>
+                <td class="text-right">Total:</td>
+                <td class="text-right font-weight-bold">
+                  {{ order.totalPrice }}
+                </td>
               </tr>
             </tbody>
           </template>
