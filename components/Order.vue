@@ -100,6 +100,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { dateOut } from '@/helpers/dateHelpers'
 
 export default {
   props: {
@@ -118,7 +119,7 @@ export default {
       customerMatches: [],
       customerConfirmDialog: false,
       oDates: {
-        dateOrdered: this.dateFormat(this.order.dateOrdered)
+        dateOrdered: dateOut(this.order.dateOrdered)
       },
       datePickerData: {
         flag: false,
@@ -156,18 +157,11 @@ export default {
       })
       this.customerConfirmDialog = true
     },
-    dateFormat(dateIn) {
-      if (dateIn) {
-        return new Date(dateIn).toLocaleDateString()
-      } else {
-        return ''
-      }
-    },
     datePicked() {
       this.order[this.datePickerData.field] = new Date(
         this.datePickerData.date + ' 12:00:00'
       )
-      this.oDates[this.datePickerData.field] = this.dateFormat(
+      this.oDates[this.datePickerData.field] = dateOut(
         this.order[this.datePickerData.field]
       )
       this.datePickerData.field = ''

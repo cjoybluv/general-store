@@ -79,7 +79,7 @@
                   {{ item.customerName }}
                 </td>
                 <td>
-                  {{ item.dateOrdered }}
+                  {{ dateOut(item.dateOrdered) }}
                 </td>
                 <td>
                   {{ item.totalPrice }}
@@ -138,6 +138,8 @@
 </template>
 
 <script>
+import { dateOut } from '@/helpers/dateHelpers'
+
 export default {
   name: 'Orders',
   async fetch({ store, params, error }) {
@@ -175,6 +177,9 @@ export default {
   methods: {
     addOrder() {
       this.$router.push({ name: 'sales-orders-new' })
+    },
+    dateOut(dateIn) {
+      return dateOut(dateIn)
     },
     openOrder(order) {
       this.$router.push({ path: '/sales/orders/' + order._id })
