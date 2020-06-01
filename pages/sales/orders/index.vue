@@ -56,13 +56,23 @@
           <template v-slot:default>
             <thead>
               <tr>
-                <th
-                  v-for="(key, index) in keys"
-                  :key="index"
-                  class="text-left"
-                  :class="{ 'blue--text': sortBy === key }"
-                >
-                  {{ key }}
+                <th>
+                  Order#
+                </th>
+                <th>
+                  CustomerName
+                </th>
+                <th>
+                  Date Ordered
+                </th>
+                <th>
+                  Date Shipped
+                </th>
+                <th class="text-right">
+                  Total Price
+                </th>
+                <th class="text-right">
+                  Balance
                 </th>
               </tr>
             </thead>
