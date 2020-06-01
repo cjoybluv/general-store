@@ -99,14 +99,14 @@
             </thead>
             <tbody>
               <tr
-                v-for="(lineItem, index) in product.lineItems"
-                :key="lineItem.product"
+                v-for="(lineItem, index) in order.products"
+                :key="lineItem.product.id"
               >
-                <td>{{ lineItem.productCode }}</td>
-                <td>{{ lineItem.description }}</td>
-                <td>{{ lineItem.unit }}</td>
-                <td class="text-right">{{ lineItem.unitPrice }}</td>
-                <td class="text-right">
+                <td class="medium">{{ lineItem.productCode }}</td>
+                <td>{{ lineItem.product.description }}</td>
+                <td>{{ lineItem.product.unit }}</td>
+                <td class="text-right">{{ lineItem.product.price }}</td>
+                <td class="text-right short">
                   <v-text-field
                     v-model="lineItem.quantity"
                     placeholder="Enter Quantity"
@@ -274,17 +274,6 @@ export default {
       productSearch: 'products/productSearch'
     })
   },
-  mounted() {
-    if (this.order.customer) {
-      this.customer = { ...this.getCustomer(this.order.customer) }
-    }
-    if (this.order.products) {
-      this.product.lineItems = this.order.products.map((prod) => {
-        const p = this.getProduct(prod.product)
-        return { ...prod, description: p.description, unit: p.unit }
-      })
-    }
-  },
   methods: {
     customerLookup() {
       const searchMatches = this.customerSearch.filter((cust) => {
@@ -386,5 +375,11 @@ td {
 }
 .right-border {
   border-right: 1px solid lightgrey;
+}
+.short {
+  width: 100px;
+}
+.medium {
+  width: 150px;
 }
 </style>

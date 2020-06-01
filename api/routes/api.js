@@ -276,6 +276,7 @@ router.get('/orders/:id', verifyToken, (req, res, next) => {
     } else {
       Order.findById(req.params.id)
         .populate('customer')
+        .populate('products.product')
         .then((order) => {
           res.json(order)
         })
