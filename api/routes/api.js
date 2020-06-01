@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt')
 
 const router = express.Router()
 
+const AppData = require('../models/appData')
 const User = require('../models/users')
 const Customer = require('../models/customers')
 const Product = require('../models/products')
@@ -274,6 +275,8 @@ router.get('/orders/:id', verifyToken, (req, res, next) => {
       res.sendStatus(403)
     } else {
       Order.findById(req.params.id)
+        .populate('customer')
+        .populate('products.product')
         .then((order) => {
           res.json(order)
         })
@@ -334,6 +337,25 @@ router.delete('/orders/:id', verifyToken, (req, res, next) => {
         .catch((error) => {
           res.json({ error })
         })
+    }
+  })
+})
+
+router.get('/appData/newOrderNo', verifyToken, (req, res, next) => {
+  jwt.verify(req.token, AUTH_SECRET_KEY, (err, _authData) => {
+    if (err) {
+      res.sendStatus(403)
+    } else {
+      AppData.findOne({ code: 'nextOrderNo' }).then((appData) => {
+        res.json(appData)
+        const nextOrderNo = (parseInt(appData.data) + 1).toString()
+        AppData.findByIdAndUpdate(
+          { _id: appData._id },
+          { data: nextOrderNo }
+        ).catch((err) => {
+          res.json(err)
+        })
+      })
     }
   })
 })

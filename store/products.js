@@ -6,6 +6,26 @@ export const state = () => ({
   products: [],
   product: {}
 })
+
+export const getters = {
+  productSearch: (state) => {
+    return state.products.map((product) => {
+      return {
+        _id: product._id,
+        record: product.code + product.description
+      }
+    })
+  },
+  getById: (state) => (id) => {
+    return (
+      state.products &&
+      state.products.filter((product) => {
+        return product._id === id
+      })[0]
+    )
+  }
+}
+
 export const mutations = {
   SAVE_PRODUCT(state, product) {
     state.products.push(product)
@@ -21,6 +41,7 @@ export const mutations = {
     Vue.set(state.products, idx, { ...product })
   }
 }
+
 export const actions = {
   fetchProducts({ state, commit }) {
     return this.$axios

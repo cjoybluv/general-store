@@ -73,7 +73,7 @@ export default {
             .dispatch('auth/login', this.loginData)
             .then((authData) => {
               this.$router.push({
-                name: 'sales-customers'
+                name: 'sales-orders'
               })
             })
             .catch(() => {})
