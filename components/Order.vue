@@ -395,17 +395,6 @@ export default {
       this.order.totalPrice = parseFloat(
         this.order.products.reduce(this.sumTotal).extendedPrice.toFixed(2)
       )
-
-      console.log('quantityUpdate', typeof this.product.lookup)
-      if (typeof this.product.lookup === 'string') {
-        this.product.lookup = null
-      } else {
-        this.product.lookup = ''
-      }
-
-      // this.$nextTick(function() {
-      //   console.log('DOM updated')
-      // })
     }
   }
 }
