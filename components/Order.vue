@@ -13,7 +13,7 @@
     </v-toolbar>
 
     <v-row>
-      <v-col cols="12" sm="6" class="pl-6 right-border">
+      <v-col cols="12" sm="6" class="pl-6 py-0 right-border">
         <v-row class="px-2">
           <v-col class="py-0">
             <v-text-field
@@ -54,9 +54,9 @@
           </v-col>
         </v-row>
       </v-col>
-      <v-col cols="12" sm="6">
+      <v-col cols="12" sm="6" class="py-0">
         <v-row>
-          <v-col cols="12" sm="6">
+          <v-col cols="12" sm="6" class="py-0">
             <v-row
               ><v-text-field
                 v-model="oDates.dateOrdered"
@@ -76,8 +76,44 @@
                 @click="pickDate('dateShipped')"
             /></v-row>
           </v-col>
-          <v-col cols="12" sm="6">
-            Paid: {{ order.totalPaid }} Balance: {{ order.balance }}
+          <v-col cols="12" sm="6" class="py-0">
+            <v-row>
+              <v-text-field
+                v-model="order.paymentTerms"
+                label="Pmt Terms"
+                class="mx-4"
+                dense
+              />
+            </v-row>
+            <v-row>
+              <v-text-field
+                v-model="order.paymentMethod"
+                label="Pmt Method"
+                class="mx-4"
+                dense
+              />
+            </v-row>
+            <v-row>
+              <v-col class="py-0">
+                <v-text-field
+                  v-model="order.totalPaid"
+                  label="Paid"
+                  class="mx-2 rtl"
+                  prefix="$"
+                  dense
+                />
+              </v-col>
+              <v-col class="py-0">
+                <v-text-field
+                  v-model="order.balance"
+                  label="Balance"
+                  class="mx-2 rtl"
+                  prefix="$"
+                  dense
+                  readonly
+                />
+              </v-col>
+            </v-row>
           </v-col>
         </v-row>
       </v-col>
@@ -100,7 +136,7 @@
             <tbody>
               <tr
                 v-for="(lineItem, index) in order.products"
-                :key="lineItem.product.id"
+                :key="lineItem.productCode"
               >
                 <td class="medium">{{ lineItem.productCode }}</td>
                 <td>{{ lineItem.product.description }}</td>
@@ -109,13 +145,16 @@
                 <td class="text-right short">
                   <v-text-field
                     v-model="lineItem.quantity"
-                    placeholder="Enter Quantity"
+                    placeholder="Quantity"
                     autofocus
                     dense
+                    class="rtl"
                     @change="quantityUpdate(lineItem, index)"
                   />
                 </td>
-                <td class="text-right">{{ lineItem.extendedPrice }}</td>
+                <td class="text-right short">
+                  {{ lineItem.extendedPrice.toFixed(2) }}
+                </td>
               </tr>
               <tr>
                 <td>
@@ -131,7 +170,7 @@
                 <td></td>
                 <td class="text-right">Total:</td>
                 <td class="text-right font-weight-bold">
-                  {{ order.totalPrice }}
+                  {{ order.totalPrice.toFixed(2) }}
                 </td>
               </tr>
             </tbody>
@@ -322,17 +361,11 @@ export default {
       this.customerConfirmDialog = false
     },
     selectProduct(prod) {
-      this.product.lineItems.push({
-        product: prod._id,
-        productCode: prod.code,
-        description: prod.description,
-        unit: prod.unit,
-        unitPrice: prod.price
-      })
       this.order.products.push({
-        product: prod._id,
+        product: prod,
         productCode: prod.code,
-        unitPrice: prod.price
+        unitPrice: prod.price,
+        extendedPrice: 0
       })
       this.product.lookup = ''
       this.product.dialog = false
@@ -345,28 +378,40 @@ export default {
       }
     },
     quantityUpdate(lineItem, index) {
-      const extendedPrice = (
-        parseFloat(lineItem.unitPrice).toFixed(2) *
-        parseFloat(lineItem.quantity)
-      ).toFixed(2)
+      const extendedPrice = parseFloat(
+        (
+          parseFloat(lineItem.product.price) * parseFloat(lineItem.quantity)
+        ).toFixed(2)
+      )
+
+      this.order.products[index].extendedPrice = extendedPrice
+      // Vue.set(this.order.products[index].extendedPrice, 0, extendedPrice)
       Vue.set(this.order.products, index, {
         ...this.order.products[index],
         quantity: lineItem.quantity,
         extendedPrice
       })
-      Vue.set(this.product.lineItems, index, {
-        ...lineItem,
-        extendedPrice
-      })
-      this.order.totalPrice = this.product.lineItems.reduce(
-        this.sumTotal
-      ).extendedPrice
+
+      this.order.totalPrice = parseFloat(
+        this.order.products.reduce(this.sumTotal).extendedPrice.toFixed(2)
+      )
+
+      console.log('quantityUpdate', typeof this.product.lookup)
+      if (typeof this.product.lookup === 'string') {
+        this.product.lookup = null
+      } else {
+        this.product.lookup = ''
+      }
+
+      // this.$nextTick(function() {
+      //   console.log('DOM updated')
+      // })
     }
   }
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 td {
   cursor: pointer;
 }
@@ -381,5 +426,8 @@ td {
 }
 .medium {
   width: 150px;
+}
+.rtl input {
+  direction: rtl;
 }
 </style>

@@ -30,7 +30,8 @@ export default {
         orderNo: this.nextOrderNo,
         dateOrdered: today,
         customer: {},
-        products: []
+        products: [],
+        totalPrice: 0
       }
     }
   },
