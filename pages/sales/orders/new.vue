@@ -31,7 +31,8 @@ export default {
         dateOrdered: today,
         customer: {},
         products: [],
-        totalPrice: 0
+        totalPrice: 0,
+        totalPaid: 0
       }
     }
   },

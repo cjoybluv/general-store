@@ -84,8 +84,11 @@
                 <td>
                   {{ dateOut(item.dateShipped) }}
                 </td>
-                <td>
-                  {{ item.totalPrice }}
+                <td class="text-right">
+                  {{ item.totalPrice.toFixed(2) }}
+                </td>
+                <td class="text-right">
+                  {{ item.balance.toFixed(2) }}
                 </td>
               </tr>
             </tbody>
@@ -168,7 +171,8 @@ export default {
         'CustomerName',
         'Date Ordered',
         'Date Shipped',
-        'Total Price'
+        'Total Price',
+        'Balance'
       ]
     }
   },
