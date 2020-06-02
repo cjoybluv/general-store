@@ -236,6 +236,33 @@ router.put('/products/:id', verifyToken, (req, res, next) => {
   })
 })
 
+router.put('/products/:id/updateInventory', verifyToken, (req, res, next) => {
+  jwt.verify(req.token, AUTH_SECRET_KEY, (err, _authData) => {
+    if (err) {
+      res.sendStatus(403)
+    } else {
+      Product.findById(req.params.id).then((product) => {
+        const update = {
+          inventory: product.inventory - req.body.quantity
+        }
+        Product.findByIdAndUpdate({ _id: req.params.id }, update)
+          .then(() => {
+            Product.findById(req.params.id)
+              .then((product) => {
+                res.json(product)
+              })
+              .catch((error) => {
+                res.json({ error })
+              })
+          })
+          .catch((error) => {
+            res.json({ error })
+          })
+      })
+    }
+  })
+})
+
 router.delete('/products/:id', verifyToken, (req, res, next) => {
   jwt.verify(req.token, AUTH_SECRET_KEY, (err, _authData) => {
     if (err) {
@@ -294,6 +321,9 @@ router.post('/orders', verifyToken, (req, res, next) => {
     } else {
       Order.create(req.body)
         .then((order) => {
+          order.products.forEach(async function(product) {
+            //
+          })
           res.json(order)
         })
         .catch((error) => {
