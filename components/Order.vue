@@ -133,7 +133,7 @@
                 <th class="text-right">Extended Price</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody :key="productsKey">
               <tr
                 v-for="(lineItem, index) in order.products"
                 :key="lineItem.productCode"
@@ -296,11 +296,11 @@ export default {
         }
       },
       product: {
-        lineItems: [],
         lookup: '',
         matches: [],
         dialog: false
-      }
+      },
+      productsKey: 0
     }
   },
   computed: {
@@ -404,7 +404,11 @@ export default {
       this.order.totalPrice = parseFloat(
         this.order.products.reduce(this.sumTotal).extendedPrice.toFixed(2)
       )
-      this.$forceUpdate()
+      // this.$forceUpdate()
+      this.forceRender()
+    },
+    forceRender() {
+      this.productKey += 1
     }
   }
 }
