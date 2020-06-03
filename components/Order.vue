@@ -237,6 +237,7 @@
               <th>Description</th>
               <th>Unit</th>
               <th class="text-right">Price</th>
+              <th class="text-right">inventory</th>
             </tr>
           </thead>
           <tbody>
@@ -249,6 +250,9 @@
               <td>{{ prod.description }}</td>
               <td>{{ prod.unit }}</td>
               <td class="text-right">{{ prod.price }}</td>
+              <td class="text-right" :class="{ danger: lowInventory(prod) }">
+                {{ prod.inventory }}
+              </td>
             </tr>
           </tbody>
         </template>
@@ -334,6 +338,13 @@ export default {
       this.datePickerData.field = ''
       this.datePickerData.flag = false
     },
+    lowInventory(prod) {
+      if (prod.inventory < 10) {
+        return true
+      } else {
+        return false
+      }
+    },
     pickDate(dateField) {
       this.datePickerData.field = dateField
       let date
@@ -384,8 +395,6 @@ export default {
         ).toFixed(2)
       )
 
-      this.order.products[index].extendedPrice = extendedPrice
-      // Vue.set(this.order.products[index].extendedPrice, 0, extendedPrice)
       Vue.set(this.order.products, index, {
         ...this.order.products[index],
         quantity: lineItem.quantity,
@@ -395,6 +404,7 @@ export default {
       this.order.totalPrice = parseFloat(
         this.order.products.reduce(this.sumTotal).extendedPrice.toFixed(2)
       )
+      this.$forceUpdate()
     }
   }
 }
@@ -418,5 +428,8 @@ td {
 }
 .rtl input {
   direction: rtl;
+}
+.danger {
+  background: red;
 }
 </style>

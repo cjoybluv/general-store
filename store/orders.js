@@ -56,6 +56,15 @@ export const actions = {
     } else {
       return this.$axios.post('/orders', order).then((response) => {
         commit('SAVE_ORDER', response.data)
+        response.data.products.forEach((product) => {
+          this.$axios
+            .put('/products/' + product.product + '/updateInventory', {
+              quantity: product.quantity
+            })
+            .then((response) => {
+              commit('products/UPDATE_PRODUCT', response.data, { root: true })
+            })
+        })
       })
     }
   },
