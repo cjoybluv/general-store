@@ -1,7 +1,7 @@
 <template>
   <div id="customer">
     <v-form @submit.prevent="saveHandler(customer)">
-      <v-toolbar class="no-background mb-3" dense elevation="1">
+      <v-toolbar v-if="!noTitle" class="no-background mb-3" dense elevation="1">
         <v-spacer></v-spacer>
         <v-icon>mdi-card-account-details-outline</v-icon>
         <v-toolbar-title class="ml-1">Customer</v-toolbar-title>
@@ -40,6 +40,7 @@
 
 <script>
 export default {
+  name: 'Customer',
   props: {
     customer: {
       type: Object,
@@ -48,6 +49,10 @@ export default {
     saveHandler: {
       type: Function,
       required: true
+    },
+    noTitle: {
+      type: Boolean,
+      default: false
     }
   }
 }

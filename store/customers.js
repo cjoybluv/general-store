@@ -74,10 +74,12 @@ export const actions = {
         .put('/customers/' + customer._id, customer)
         .then((response) => {
           commit('UPDATE_CUSTOMER', response.data)
+          commit('SET_CUSTOMER', response.data)
         })
     } else {
       return this.$axios.post('/customers', customer).then((response) => {
         commit('SAVE_CUSTOMER', response.data)
+        commit('SET_CUSTOMER', response.data)
       })
     }
   }

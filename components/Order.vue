@@ -13,15 +13,22 @@
     </v-toolbar>
 
     <v-row>
-      <v-col cols="12" sm="6" class="pl-6 py-0 right-border">
+      <v-col
+        v-if="!addingCustomer"
+        cols="12"
+        sm="6"
+        class="pl-6 py-0 right-border"
+      >
         <v-row class="px-2">
           <v-col class="py-0">
             <v-text-field
               v-model="order.customerName"
               placeholder="Customer Name / Lookup"
+              append-icon="mdi-plus"
               dense
               autofocus
               @change="customerLookup"
+              @click:append="addCustomer"
             />
           </v-col>
         </v-row>
@@ -53,6 +60,13 @@
             />
           </v-col>
         </v-row>
+      </v-col>
+      <v-col v-if="addingCustomer" cols="12" sm="6" class="py-0">
+        <Customer
+          :customer="customer"
+          :save-handler="saveNewCustomer"
+          no-title
+        />
       </v-col>
       <v-col cols="12" sm="6" class="py-0">
         <v-row>
@@ -263,10 +277,16 @@
 
 <script>
 import Vue from 'vue'
-import { mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import { dateOut } from '@/helpers/dateHelpers'
 
+import Customer from '@/components/Customer'
+
 export default {
+  name: 'Order',
+  components: {
+    Customer
+  },
   props: {
     order: {
       type: Object,
@@ -279,6 +299,7 @@ export default {
   },
   data() {
     return {
+      addingCustomer: false,
       customer: {},
       customerMatches: [],
       customerConfirmDialog: false,
@@ -318,6 +339,9 @@ export default {
     })
   },
   methods: {
+    addCustomer() {
+      this.addingCustomer = true
+    },
     customerLookup() {
       const searchMatches = this.customerSearch.filter((cust) => {
         const rec = cust.record.toLowerCase()
@@ -366,6 +390,13 @@ export default {
       })
       this.product.dialog = true
     },
+    saveNewCustomer(formData) {
+      this.saveCustomer({ ...formData }).then(() => {
+        this.order.customer = this.$store.state.customers.customer
+        this.order.customerName = this.order.customer.name
+        this.addingCustomer = false
+      })
+    },
     selectCustomer(cust) {
       this.order.customer = { ...cust }
       this.order.customerName = cust.name
@@ -409,7 +440,10 @@ export default {
     },
     forceRender() {
       this.productKey += 1
-    }
+    },
+    ...mapActions({
+      saveCustomer: 'customers/saveCustomer'
+    })
   }
 }
 </script>
