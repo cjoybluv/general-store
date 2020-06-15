@@ -143,6 +143,7 @@
 <script>
 export default {
   name: 'Products',
+  transition: 'fade',
   async fetch({ store, params, error }) {
     try {
       await store.dispatch('products/fetchProducts')

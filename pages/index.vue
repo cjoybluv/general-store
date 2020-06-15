@@ -67,9 +67,12 @@ import Logo from '~/components/Logo.vue'
 import VuetifyLogo from '~/components/VuetifyLogo.vue'
 
 export default {
+  transition: 'fade',
   components: {
     Logo,
     VuetifyLogo
   }
 }
 </script>
+
+<style lang="scss"></style>

@@ -11,6 +11,7 @@ import Order from '@/components/Order.vue'
 
 export default {
   name: 'OrderForm',
+  transition: 'fade',
   components: {
     Order
   },

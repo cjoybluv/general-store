@@ -13,3 +13,11 @@
     </v-flex>
   </v-layout>
 </template>
+
+<script>
+export default {
+  transition: 'fade'
+}
+</script>
+
+<style lang="scss"></style>

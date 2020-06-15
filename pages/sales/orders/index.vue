@@ -158,6 +158,7 @@ import { dateOut } from '@/helpers/dateHelpers'
 
 export default {
   name: 'Orders',
+  transition: 'fade',
   async fetch({ store, params, error }) {
     try {
       await store.dispatch('customers/fetchCustomers')

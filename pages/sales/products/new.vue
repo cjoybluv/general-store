@@ -10,6 +10,7 @@ import Product from '@/components/Product.vue'
 
 export default {
   name: 'NewProduct',
+  transition: 'fade',
   components: {
     Product
   },

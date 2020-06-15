@@ -111,3 +111,18 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.fade-enter {
+  transform: translateX(15px);
+  opacity: 0;
+}
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+.fade-leave-to {
+  transform: translateX(-15px);
+  opacity: 0;
+}
+</style>

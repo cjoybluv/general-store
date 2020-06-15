@@ -10,6 +10,7 @@ import Customer from '@/components/Customer.vue'
 
 export default {
   name: 'NewCustomer',
+  transition: 'fade',
   components: {
     Customer
   },

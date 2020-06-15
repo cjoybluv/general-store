@@ -9,6 +9,7 @@ import { mapActions } from 'vuex'
 import Product from '@/components/Product.vue'
 export default {
   name: 'ProductForm',
+  transition: 'fade',
   components: {
     Product
   },

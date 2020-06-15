@@ -10,6 +10,7 @@ import Order from '@/components/Order.vue'
 
 export default {
   name: 'NewOrder',
+  transition: 'fade',
   components: {
     Order
   },

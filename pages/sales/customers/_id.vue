@@ -9,6 +9,7 @@ import { mapActions } from 'vuex'
 import Customer from '@/components/Customer.vue'
 export default {
   name: 'CustomerForm',
+  transition: 'fade',
   components: {
     Customer
   },

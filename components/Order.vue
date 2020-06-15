@@ -61,6 +61,7 @@
           </v-col>
         </v-row>
       </v-col>
+
       <v-col v-if="addingCustomer" cols="12" sm="6" class="py-0">
         <Customer
           :customer="customer"
@@ -68,6 +69,7 @@
           no-title
         />
       </v-col>
+
       <v-col cols="12" sm="6" class="py-0">
         <v-row>
           <v-col cols="12" sm="6" class="py-0">
