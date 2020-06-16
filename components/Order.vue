@@ -13,28 +13,27 @@
     </v-toolbar>
 
     <v-row>
-      <v-col
-        v-if="!addingCustomer"
-        cols="12"
-        sm="6"
-        class="pl-6 py-0 right-border"
-      >
+      <v-col cols="12" sm="6" class="pl-6 py-0 right-border">
         <v-row class="px-2">
           <v-col class="py-0">
             <v-text-field
+              ref="customerLookup"
               v-model="order.customerName"
-              placeholder="Customer Name / Lookup"
-              append-icon="mdi-plus"
+              placeholder="Enter Customer Info to Lookup"
               dense
               autofocus
               @change="customerLookup"
-              @click:append="addCustomer"
             />
           </v-col>
         </v-row>
         <v-row class="px-2">
           <v-col class="py-0">
-            <v-text-field v-model="order.customer.street" dense readonly />
+            <v-text-field
+              v-model="order.customer.street"
+              placeholder="Street"
+              dense
+              readonly
+            />
           </v-col>
         </v-row>
         <v-row class="px-2">
@@ -62,14 +61,7 @@
         </v-row>
       </v-col>
 
-      <v-col v-if="addingCustomer" cols="12" sm="6" class="py-0">
-        <Customer
-          :customer="customer"
-          :save-handler="saveNewCustomer"
-          no-title
-        />
-      </v-col>
-
+      <!-- RIGHT PANEL - MID-PANEL -->
       <v-col cols="12" sm="6" class="py-0">
         <v-row>
           <v-col cols="12" sm="6" class="py-0">
@@ -162,7 +154,6 @@
                   <v-text-field
                     v-model="lineItem.quantity"
                     placeholder="Quantity"
-                    autofocus
                     dense
                     class="rtl"
                     @change="quantityUpdate(lineItem, index)"
@@ -219,6 +210,7 @@
             <tr
               v-for="cust in customerMatches"
               :key="cust._id"
+              :class="{ selected: customerMatches.length === 1 }"
               @click="selectCustomer(cust)"
             >
               <td>{{ cust.name }}</td>
@@ -230,6 +222,12 @@
           </tbody>
         </template>
       </v-simple-table>
+      <v-footer>
+        <v-spacer></v-spacer>
+        <v-btn @click="selectCustomer()">
+          Select
+        </v-btn>
+      </v-footer>
     </v-dialog>
 
     <v-dialog v-model="datePickerData.flag" width="300">
@@ -280,15 +278,14 @@
 <script>
 import Vue from 'vue'
 import { mapActions, mapGetters } from 'vuex'
+
 import { dateOut } from '@/helpers/dateHelpers'
 
-import Customer from '@/components/Customer'
+// import Customer from '@/components/Customer'
 
 export default {
   name: 'Order',
-  components: {
-    Customer
-  },
+  components: {},
   props: {
     order: {
       type: Object,
@@ -301,8 +298,9 @@ export default {
   },
   data() {
     return {
-      addingCustomer: false,
+      customerFlip: true,
       customer: {},
+      customerKey: 0,
       customerMatches: [],
       customerConfirmDialog: false,
       oDates: {
@@ -340,14 +338,18 @@ export default {
       productSearch: 'products/productSearch'
     })
   },
+  mounted() {
+    this.$refs.customerLookup.focus()
+  },
   methods: {
     addCustomer() {
-      this.addingCustomer = true
+      this.customerFlip = !this.customerFlip
     },
     customerLookup() {
-      const searchMatches = this.customerSearch.filter((cust) => {
-        const rec = cust.record.toLowerCase()
-        return rec.includes(this.order.customerName.toLowerCase())
+      const searchMatches = this.customerSearch.filter((customer) => {
+        return customer.stringSearch
+          .toLowerCase()
+          .includes(this.order.customerName.toLowerCase())
       })
       this.customerMatches = this.customers.filter((customer) => {
         return searchMatches.find((match) => match._id === customer._id)
@@ -393,16 +395,26 @@ export default {
       this.product.dialog = true
     },
     saveNewCustomer(formData) {
-      this.saveCustomer({ ...formData }).then(() => {
-        this.order.customer = this.$store.state.customers.customer
-        this.order.customerName = this.order.customer.name
-        this.addingCustomer = false
-      })
+      if (formData.name) {
+        this.saveCustomer({ ...formData }).then(() => {
+          this.order.customer = this.$store.state.customers.customer
+          this.order.customerName = this.order.customer.name
+        })
+      }
+      this.customerFlip = !this.customerFlip
     },
-    selectCustomer(cust) {
-      this.order.customer = { ...cust }
-      this.order.customerName = cust.name
-      this.customerConfirmDialog = false
+    selectCustomer(customer) {
+      if (customer) {
+        this.order.customer = customer
+        this.order.customerName = customer.name
+        this.customerConfirmDialog = false
+        this.forceRender('customerKey')
+      } else if (this.customerMatches.length === 1) {
+        this.order.customer = this.customerMatches[0]
+        this.order.customerName = this.order.customer.name
+        this.customerConfirmDialog = false
+        this.forceRender('customerKey')
+      }
     },
     selectProduct(prod) {
       this.order.products.push({
@@ -438,10 +450,10 @@ export default {
         this.order.products.reduce(this.sumTotal).extendedPrice.toFixed(2)
       )
       // this.$forceUpdate()
-      this.forceRender()
+      this.forceRender('productsKey')
     },
-    forceRender() {
-      this.productKey += 1
+    forceRender(key) {
+      this[key] += 1
     },
     ...mapActions({
       saveCustomer: 'customers/saveCustomer'
@@ -471,5 +483,8 @@ td {
 }
 .danger {
   background: red;
+}
+.selected {
+  background: #eee;
 }
 </style>

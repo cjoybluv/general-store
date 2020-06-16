@@ -8,11 +8,12 @@ export const state = () => ({
 })
 
 export const getters = {
+  //
   customerSearch: (state) => {
     return state.customers.map((customer) => {
       return {
         _id: customer._id,
-        record:
+        stringSearch:
           customer.name +
           customer.street +
           customer.city +
